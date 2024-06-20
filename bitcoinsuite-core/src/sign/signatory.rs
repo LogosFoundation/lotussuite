@@ -18,7 +18,7 @@ pub struct P2PKHSignatory {
 impl Signatory for P2PKHSignatory {
     fn sign_input<'tx>(&self, ecc: &dyn Ecc, mut input: UnsignedTxInput<'tx>) -> Result<()> {
         let preimage = input.sighash_preimage(self.sig_hash_type, None)?;
-        let sighash = Sha256d::digest(preimage.bytes).byte_array().clone();
+        let sighash = Sha256d::digest(&preimage.bytes).byte_array().clone();
         let sig = ecc.schnorr_sign(&self.seckey, sighash);
         let mut sig_flagged = BytesMut::new();
         sig_flagged.put_bytes(sig);
@@ -43,7 +43,7 @@ mod tests {
         let ecc = DummyEcc;
         let seckey = SecKey::new_unchecked([1; 32]);
         let pubkey = PubKey::new_unchecked([2; 33]);
-        let p2pkh_script = Script::p2pkh(&ShaRmd160::digest(pubkey.array().into()));
+        let p2pkh_script = Script::p2pkh(&ShaRmd160::digest(&pubkey.array()));
 
         let tx = UnhashedTx {
             version: 1,

@@ -163,7 +163,7 @@ impl BitcoinHeader {
     pub fn calc_hash(&self) -> Sha256d {
         let mut bytes = BytesMut::new();
         self.ser_to(&mut bytes);
-        Sha256d::digest(bytes.freeze())
+        Sha256d::digest(&bytes.freeze())
     }
 
     pub fn solve(&mut self) {
@@ -188,8 +188,8 @@ impl LotusHeader {
         layer2.put_byte_array(Sha256::digest(layer3.into()).byte_array().clone());
         let mut layer1 = BytesMut::new();
         layer1.put_slice(&header[..32]);
-        layer1.put_byte_array(Sha256::digest(layer2.freeze()).byte_array().clone());
-        let hash = Sha256::digest(layer1.freeze());
+        layer1.put_byte_array(Sha256::digest(&layer2.freeze()).byte_array().clone());
+        let hash = Sha256::digest(&layer1.freeze());
         Sha256d::new(hash.byte_array().array())
     }
 
@@ -220,7 +220,7 @@ impl LotusBlock {
                 let mut leaf_bytes = BytesMut::new();
                 leaf_bytes.put_byte_array(tx.hash().byte_array().clone());
                 leaf_bytes.put_byte_array(lotus_txid(tx.unhashed_tx()).byte_array().clone());
-                Sha256d::digest(leaf_bytes.freeze())
+                Sha256d::digest(&leaf_bytes.freeze())
             })
             .collect();
         self.header.merkle_root = get_merkle_root(leaves, MerkleMode::Lotus);
@@ -229,7 +229,7 @@ impl LotusBlock {
     pub fn update_extended_metadata_hash(&mut self) {
         let mut bytes = BytesMut::new();
         self.metadata.ser_to(&mut bytes);
-        self.header.extended_metadata_hash = Sha256d::digest(bytes.freeze());
+        self.header.extended_metadata_hash = Sha256d::digest(&bytes.freeze());
     }
 
     pub fn update_size(&mut self) {

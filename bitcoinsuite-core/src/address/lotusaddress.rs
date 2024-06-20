@@ -168,7 +168,7 @@ fn calc_checksum(prefix: &str, net_char: char, payload_type: u8, payload: &[u8])
     checksum_preimage.put_slice(prefix.as_bytes());
     checksum_preimage.put_slice(&[net_char as u8, payload_type]);
     checksum_preimage.put_slice(payload);
-    let checksum_hash = Sha256::digest(checksum_preimage.freeze());
+    let checksum_hash = Sha256::digest(&checksum_preimage.freeze());
     checksum_hash.as_slice()[..LOTUS_ADDRESS_CHECKSUM_LEN]
         .try_into()
         .unwrap()

@@ -186,7 +186,7 @@ impl Script {
     }
 
     pub fn to_p2sh(&self) -> Self {
-        Script::p2sh(&ShaRmd160::digest(self.bytecode.clone()))
+        Script::p2sh(&ShaRmd160::digest(&self.bytecode.clone()))
     }
 
     pub fn is_p2sh(&self) -> bool {

@@ -33,7 +33,7 @@ pub fn get_merkle_root_and_height<H: Hashed + Clone>(
             let mut bytes = BytesMut::new();
             bytes.put_slice(pair[0].as_slice());
             bytes.put_slice(pair[1].as_slice());
-            next_layer.push(H::digest(bytes.freeze()));
+            next_layer.push(H::digest(&bytes.freeze()));
         }
         leaves = next_layer;
     }

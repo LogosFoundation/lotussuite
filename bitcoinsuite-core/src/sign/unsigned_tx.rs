@@ -121,7 +121,7 @@ impl<'tx> UnsignedTxInput<'tx> {
         preimage.put_byte_array(match sig_hash_type.output_type {
             SigHashTypeOutputs::All => self.unsigned_tx.outputs_hash.byte_array().clone(),
             SigHashTypeOutputs::Single if self.idx < tx.outputs.len() => {
-                Sha256d::digest(tx.outputs[self.idx].ser())
+                Sha256d::digest(&tx.outputs[self.idx].ser())
                     .byte_array()
                     .clone()
             }
@@ -142,7 +142,7 @@ fn calc_prevouts_hash(tx: &UnhashedTx) -> Sha256d {
     for input in &tx.inputs {
         hashes.put_bytes(input.prev_out.ser());
     }
-    Sha256d::digest(hashes.freeze())
+    Sha256d::digest(&hashes.freeze())
 }
 
 fn calc_sequences_hash(tx: &UnhashedTx) -> Sha256d {
@@ -150,7 +150,7 @@ fn calc_sequences_hash(tx: &UnhashedTx) -> Sha256d {
     for input in &tx.inputs {
         hashes.put_bytes(input.sequence.ser());
     }
-    Sha256d::digest(hashes.freeze())
+    Sha256d::digest(&hashes.freeze())
 }
 
 fn calc_outputs_hash(tx: &UnhashedTx) -> Sha256d {
@@ -158,7 +158,7 @@ fn calc_outputs_hash(tx: &UnhashedTx) -> Sha256d {
     for output in &tx.outputs {
         hashes.put_bytes(output.ser());
     }
-    Sha256d::digest(hashes.freeze())
+    Sha256d::digest(&hashes.freeze())
 }
 
 #[cfg(test)]

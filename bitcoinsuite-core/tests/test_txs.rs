@@ -1,3 +1,4 @@
+
 use bitcoinsuite_core::{
     ecc::Ecc, BitcoinCode, Hashed, OutPoint, P2PKHSignatory, Script, SequenceNo, Sha256d,
     ShaRmd160, SigHashType, SignData, SignField, TxBuilder, TxBuilderInput, TxBuilderOutput,
@@ -13,7 +14,7 @@ async fn test_txs() -> Result<(), Box<dyn std::error::Error>> {
     let ecc = EccSecp256k1::default();
     let seckey = ecc.seckey_from_array([1; 32])?;
     let pubkey = ecc.derive_pubkey(&seckey);
-    let p2pkh_script = Script::p2pkh(&ShaRmd160::digest(pubkey.array().into()));
+    let p2pkh_script = Script::p2pkh(&ShaRmd160::digest(&pubkey.array()));
 
     let (outpoint, value) = utxos.pop().unwrap();
     let output_value = value / 12 - 10_000;

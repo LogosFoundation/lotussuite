@@ -17,7 +17,7 @@ pub trait Hashed: Display + Debug + Eq + PartialEq + AsRef<[u8]> + Hash + Sized 
     type Array: Default;
     fn size() -> usize;
     fn from_array(array: Self::Array) -> Self;
-    fn digest(data: Bytes) -> Self;
+    fn digest(data: &[u8]) -> Self;
     fn from_slice_optional(hash: &[u8]) -> Option<Self>;
     fn byte_array(&self) -> &Self::Array;
 
@@ -81,7 +81,7 @@ macro_rules! hash_algo {
                 $NAME(array)
             }
 
-            fn digest(data: Bytes) -> Self {
+            fn digest(data: &[u8]) -> Self {
                 let hash = $DIGEST_FN(data.as_ref());
                 Self::new(hash.into())
             }

@@ -50,7 +50,7 @@ impl UnhashedTx {
         let mut data = BytesMut::new();
         self.ser_to(&mut data);
         let raw = data.freeze();
-        let hash = Sha256d::digest(raw.clone());
+        let hash = Sha256d::digest(&raw.clone());
         Tx {
             unhashed_tx: self,
             hash,
@@ -69,7 +69,7 @@ pub fn lotus_txid(tx: &UnhashedTx) -> Sha256d {
     outputs_hash.ser_to(&mut data);
     (outputs_height as u8).ser_to(&mut data);
     tx.lock_time.ser_to(&mut data);
-    Sha256d::digest(data.freeze())
+    Sha256d::digest(&data.freeze())
 }
 
 fn lotus_tx_inputs_merkle_root(inputs: &[TxInput]) -> (Sha256d, usize) {
@@ -79,7 +79,7 @@ fn lotus_tx_inputs_merkle_root(inputs: &[TxInput]) -> (Sha256d, usize) {
             let mut data = BytesMut::new();
             input.prev_out.ser_to(&mut data);
             input.sequence.ser_to(&mut data);
-            Sha256d::digest(data.freeze())
+            Sha256d::digest(&data.freeze())
         })
         .collect::<Vec<_>>();
     get_merkle_root_and_height(leaves, MerkleMode::Lotus)
@@ -88,7 +88,7 @@ fn lotus_tx_inputs_merkle_root(inputs: &[TxInput]) -> (Sha256d, usize) {
 fn lotus_tx_outputs_merkle_root(outputs: &[TxOutput]) -> (Sha256d, usize) {
     let leaves = outputs
         .iter()
-        .map(|output| Sha256d::digest(output.ser()))
+        .map(|output| Sha256d::digest(&output.ser()))
         .collect::<Vec<_>>();
     get_merkle_root_and_height(leaves, MerkleMode::Lotus)
 }
